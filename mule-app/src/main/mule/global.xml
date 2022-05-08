@@ -7,17 +7,27 @@
 
 	<global-property doc:name="Global Property" doc:id="c0b3b6d8-0304-43a8-b583-9c449db30440" name="appMode" value="all" />
 	<global-property doc:name="Global Property" doc:id="3792e359-a15f-41f6-8556-71048b1b5f39" name="http.port" value="8081" />
+	<global-property doc:name="Global Property" doc:id="77b4421d-94e8-434c-84c4-1d401c4c916b" name="exp.http.host" value="localhost" />
+	<global-property doc:name="Global Property" doc:id="e54e404f-6ef1-4be1-9f85-db6bde21c8a1" name="exp.http.port" value="${http.port}" />
 	<global-property doc:name="Global Property" doc:id="a6268feb-036f-482e-9ff0-021621ff92a6" name="prc.http.host" value="localhost" />
 	<global-property doc:name="Global Property" doc:id="dfe5893c-7a47-4aa3-87e0-d9c4ac096827" name="prc.http.port" value="${http.port}" />
 	<global-property doc:name="Global Property" doc:id="23d48b5f-d359-4ad1-820b-6a60802b0777" name="sys.http.host" value="localhost" />
 	<global-property doc:name="Global Property" doc:id="5074f168-c155-492e-b5f2-b6f3686783f8" name="sys.http.port" value="${http.port}" />
+	<global-property doc:name="Global Property" doc:id="98bb4e69-ad92-4e67-b8a2-5d986667e3b5" name="external.sv.http.host" value="localhost" />
+	<global-property doc:name="Global Property" doc:id="5c7190fb-2993-4c52-9d35-49ba3f81c369" name="external.sv.http.port" value="${http.port}" />
 	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="8d54f707-e90b-4969-bada-e33f6d8b7e4b" >
-		<http:listener-connection host="0.0.0.0" port="8081" />
+		<http:listener-connection host="0.0.0.0" port="8081" readTimeout="3600000"/>
 	</http:listener-config>
+	<http:request-config name="exp_HTTP_Request_conf" doc:name="HTTP Request configuration" doc:id="51e6b9da-69ad-4ac6-80ca-233a1962a755">
+		<http:request-connection host="${exp.http.host}" port="${exp.http.port}" />
+	</http:request-config>
 	<http:request-config name="prc_HTTP_Request_conf" doc:name="HTTP Request configuration" doc:id="dff2b8f9-331d-431b-aa5f-31cebd5a698e">
-		<http:request-connection host="${prc.http.host}" port="${sys.http.port}" />
+		<http:request-connection host="${prc.http.host}" port="${prc.http.port}" />
 	</http:request-config>
 	<http:request-config name="sys_HTTP_Request_conf" doc:name="HTTP Request configuration" doc:id="a3491543-b9b5-4233-a665-28a1922d5c8f">
 		<http:request-connection host="${sys.http.host}" port="${sys.http.port}" />
+	</http:request-config>
+	<http:request-config name="external-sv_HTTP_Request_conf" doc:name="HTTP Request configuration" doc:id="b7cb58d3-4279-4afe-ae4a-646e1c473379">
+		<http:request-connection host="${external.sv.http.host}" port="${external.sv.http.port}" />
 	</http:request-config>
 </mule>

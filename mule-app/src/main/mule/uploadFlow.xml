@@ -6,12 +6,15 @@
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
 	<flow name="expUploadFlow" doc:id="4e7a9b1e-d87e-46e6-8429-4ba3e662f9db" >
-		<http:listener doc:name="Listener" doc:id="76798d2f-f349-40ce-9cc2-64f586bafa8c" config-ref="HTTP_Listener_config" path="/exp/upload"/>
+		<http:listener doc:name="Listener" doc:id="76798d2f-f349-40ce-9cc2-64f586bafa8c" config-ref="HTTP_Listener_config" path="/exp/upload">
+			<non-repeatable-stream />
+		</http:listener>
 		<logger level="INFO" doc:name="Logger" doc:id="b4733213-3e96-495c-9406-63c8c31ae3d3" message="#[attributes]"/>
 		<logger level="DEBUG" doc:name="Logger" doc:id="8a5664c0-d563-48f6-87cf-f219e4768dc8" message="#[payload]"/>
-		<validation:matches-regex doc:name="check appMode" doc:id="96cd64cb-4004-4a12-a9ee-0d934873f928" value="${app.name}" caseSensitive="false" message='#["this is exp flow, but app.name=${app.name}."]' regex="(test-throughput-app|-exp)$"/>
-		<http:request method="POST" doc:name="Request" doc:id="82333c17-b83b-49aa-b6f7-bbb6d3420e2f" config-ref="prc_HTTP_Request_conf" path="/prc/upload">
-					<http:query-params><![CDATA[#[output application/java
+		<validation:matches-regex doc:name="check appMode" doc:id="96cd64cb-4004-4a12-a9ee-0d934873f928" value="${app.name}" caseSensitive="false" message='#["this is exp flow, but app.name=${app.name}."]' regex="(test-throughput-app|.*-exp)"/>
+		<http:request method="POST" doc:name="Request" doc:id="82333c17-b83b-49aa-b6f7-bbb6d3420e2f" config-ref="prc_HTTP_Request_conf" path="/prc/upload" responseTimeout="3600000">
+			<non-repeatable-stream />
+			<http:query-params><![CDATA[#[output application/java
 ---
 {
 	(prcMode : attributes.queryParams.prcMode) if attributes.queryParams.prcMode != null,
@@ -22,12 +25,15 @@ http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mu
 	</flow>
 
 	<flow name="prcUploadFlow" doc:id="73d8cc6f-9453-4fd8-9d0e-40d3929e6cfa" >
-		<http:listener doc:name="Listener" doc:id="43f595a2-9d62-478c-8ccd-2df19a36c9f7" config-ref="HTTP_Listener_config" path="/prc/upload"/>
+		<http:listener doc:name="Listener" doc:id="43f595a2-9d62-478c-8ccd-2df19a36c9f7" config-ref="HTTP_Listener_config" path="/prc/upload">
+			<non-repeatable-stream />
+		</http:listener>
 		<logger level="INFO" doc:name="Logger" doc:id="6ce1518f-f2b9-40ee-bf25-4a7b80d6cdbd" message="#[attributes]"/>
 		<logger level="DEBUG" doc:name="Logger" doc:id="4c01daa0-3b38-4062-a4f1-fdbe14219739" message="#[payload]"/>
-		<validation:matches-regex doc:name="check appMode" doc:id="9ee002d0-5664-4407-80ae-e1693eaeea96" value="${app.name}" caseSensitive="false" message='#["this is prc flow, but app.name=${app.name}."]' regex="(test-throughput-app|-prc)$"/>
-		<http:request method="POST" doc:name="Request" doc:id="8dab1e9e-80aa-473c-a6f2-cabaa3a84b74" config-ref="sys_HTTP_Request_conf" path="/sys/upload">
-					<http:query-params><![CDATA[#[output application/java
+		<validation:matches-regex doc:name="check appMode" doc:id="9ee002d0-5664-4407-80ae-e1693eaeea96" value="${app.name}" caseSensitive="false" message='#["this is prc flow, but app.name=${app.name}."]' regex="(test-throughput-app|.*-prc)"/>
+		<http:request method="POST" doc:name="Request" doc:id="8dab1e9e-80aa-473c-a6f2-cabaa3a84b74" config-ref="sys_HTTP_Request_conf" path="/sys/upload" responseTimeout="3600000">
+			<non-repeatable-stream />
+			<http:query-params><![CDATA[#[output application/java
 ---
 {
 	(sysMode : attributes.queryParams.sysMode) if attributes.queryParams.sysMode != null,
@@ -37,10 +43,12 @@ http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mu
 	</flow>
 
 	<flow name="sysUploadFlow" doc:id="b344ee9b-dad8-4dcc-8915-c95552fe60fb" >
-		<http:listener doc:name="Listener" doc:id="b6442cbb-e401-414b-9cda-4c7df183b5b1" config-ref="HTTP_Listener_config" path="/sys/upload"/>
+		<http:listener doc:name="Listener" doc:id="b6442cbb-e401-414b-9cda-4c7df183b5b1" config-ref="HTTP_Listener_config" path="/sys/upload">
+			<non-repeatable-stream />
+		</http:listener>
 		<logger level="INFO" doc:name="Logger" doc:id="ab780377-ad64-4f9b-be58-c64477d8029b" message="#[attributes]"/>
 		<logger level="DEBUG" doc:name="Logger" doc:id="361b45b8-7efc-4979-a708-22b98bc66875" message="#[payload]"/>
-		<validation:matches-regex doc:name="check appMode" doc:id="e29cb67e-2405-4e75-8ac6-09d873975bdd" value="${app.name}" caseSensitive="false" message='#["this is sys flow, but app.name=${app.name}."]' regex="(test-throughput-app|-sys)$"/>
+		<validation:matches-regex doc:name="check appMode" doc:id="e29cb67e-2405-4e75-8ac6-09d873975bdd" value="${app.name}" caseSensitive="false" message='#["this is sys flow, but app.name=${app.name}."]' regex="(test-throughput-app|.*-sys)"/>
 		<choice doc:name="Choice" doc:id="5e964485-8f1b-467d-a55b-f39c4428b77e" >
 			<when expression='#[null == attributes.queryParams.sysMode]'>
 				<logger level="INFO" doc:name="Logger" doc:id="7ecdd8c3-65cf-49b5-98f1-caea6a23d87d" message="sysMode=null"/>
