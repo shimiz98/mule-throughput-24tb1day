@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.mycompany</groupId>
-	<artifactId>test-throughput</artifactId>
+	<artifactId>test-throughput-app</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>mule-application</packaging>
 
-	<name>test-throughput</name>
+	<name>test-throughput-app</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -54,7 +54,7 @@
 		</dependency>
 		<dependency>
 			<groupId>io.github.shimiz98</groupId>
-			<artifactId>dummy-data-generator-extension</artifactId>
+			<artifactId>test-throughput-module</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 			<classifier>mule-plugin</classifier>
 		</dependency>

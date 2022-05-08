@@ -19,9 +19,9 @@ public class BasicOperations {
   public InputStream gernerateDummyData(String size) {
 	  long reqSize;
 	  if (size.endsWith("k") || size.endsWith("K")) {
-		  reqSize = Long.parseLong(size.substring(0, size.length() - 1)) * 1024 * 1024 * 1024;
+		  reqSize = Long.parseLong(size.substring(0, size.length() - 1)) * 1024;
 	  } else if (size.endsWith("m") || size.endsWith("M")) {
-		  reqSize = Long.parseLong(size.substring(0, size.length() - 1)) * 1024 * 1024 * 1024;
+		  reqSize = Long.parseLong(size.substring(0, size.length() - 1)) * 1024 * 1024;
 	  } else if (size.endsWith("g") || size.endsWith("G")) {
 		  reqSize = Long.parseLong(size.substring(0, size.length() - 1)) * 1024 * 1024 * 1024;
 	  } else {
