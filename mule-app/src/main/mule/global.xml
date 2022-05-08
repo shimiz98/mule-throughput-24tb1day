@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+
+	<global-property doc:name="Global Property" doc:id="c0b3b6d8-0304-43a8-b583-9c449db30440" name="appMode" value="all" />
+	<global-property doc:name="Global Property" doc:id="3792e359-a15f-41f6-8556-71048b1b5f39" name="http.port" value="8081" />
+	<global-property doc:name="Global Property" doc:id="a6268feb-036f-482e-9ff0-021621ff92a6" name="prc.http.host" value="localhost" />
+	<global-property doc:name="Global Property" doc:id="dfe5893c-7a47-4aa3-87e0-d9c4ac096827" name="prc.http.port" value="${http.port}" />
+	<global-property doc:name="Global Property" doc:id="23d48b5f-d359-4ad1-820b-6a60802b0777" name="sys.http.host" value="localhost" />
+	<global-property doc:name="Global Property" doc:id="5074f168-c155-492e-b5f2-b6f3686783f8" name="sys.http.port" value="${http.port}" />
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="8d54f707-e90b-4969-bada-e33f6d8b7e4b" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<http:request-config name="prc_HTTP_Request_conf" doc:name="HTTP Request configuration" doc:id="dff2b8f9-331d-431b-aa5f-31cebd5a698e">
+		<http:request-connection host="${prc.http.host}" port="${sys.http.port}" />
+	</http:request-config>
+	<http:request-config name="sys_HTTP_Request_conf" doc:name="HTTP Request configuration" doc:id="a3491543-b9b5-4233-a665-28a1922d5c8f">
+		<http:request-connection host="${sys.http.host}" port="${sys.http.port}" />
+	</http:request-config>
+</mule>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:basic="http://www.mulesoft.org/schema/mule/basic" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/basic http://www.mulesoft.org/schema/mule/basic/current/mule-basic.xsd">
+
+	<flow name="expDownloadFlow" doc:id="4e7a9b1e-d87e-46e6-8429-4ba3e662f9db" >
+		<http:listener doc:name="Listener" doc:id="76798d2f-f349-40ce-9cc2-64f586bafa8c" config-ref="HTTP_Listener_config" path="/exp/download"/>
+		<logger level="INFO" doc:name="Logger" doc:id="e5a417ab-e5a0-40b1-9131-6282703d1052" message="#[attributes]"/>
+		<logger level="DEBUG" doc:name="Logger" doc:id="a490e31a-10af-48c4-9b61-1efe5e130baa" message="#[payload]"/>
+		<choice doc:name="Choice" doc:id="0ce9a03d-c5bf-4cc5-be5a-f79ac26e5538" >
+			<when expression='#[null == attributes.queryParams.expMode]'>
+				<logger level="INFO" doc:name="Logger" doc:id="317d13b4-dd4d-4833-a305-205e0ff25c41" message="expMode=null"/>
+				<http:request method="GET" doc:name="Request" doc:id="82333c17-b83b-49aa-b6f7-bbb6d3420e2f" config-ref="prc_HTTP_Request_conf" path="/sys/download">
+					<http:query-params ><![CDATA[#[output application/java
+---
+{
+	(prcMode : attributes.queryParams.prcMode) if attributes.queryParams.prcMode != null,
+	(sysMode : attributes.queryParams.sysMode) if attributes.queryParams.sysMode != null,
+}]]]></http:query-params>
+				</http:request>
+			</when>
+			<when expression='"zero" == attributes.queryParams.expMode'>
+				<logger level="INFO" doc:name="Logger" doc:id="7315bff6-5561-40d1-82ff-3beb80b5c1cf" message="expMode=null"/>
+			</when>
+			<otherwise>
+				<logger level="INFO" doc:name="Logger" doc:id="3fac76e8-5b12-4989-bee6-e8b22a135d57" />
+				<raise-error doc:name="Raise error" doc:id="dbe58973-4684-4a9b-8a73-581679d16f21" type="APP:UNKNOWN_MODE" description='unkown "expMode"'/>
+			</otherwise>
+		</choice>
+	</flow>
+
+	<flow name="prcDownloadFlow" doc:id="73d8cc6f-9453-4fd8-9d0e-40d3929e6cfa" >
+		<http:listener doc:name="Listener" doc:id="43f595a2-9d62-478c-8ccd-2df19a36c9f7" config-ref="HTTP_Listener_config" path="/prc/download"/>
+		<logger level="INFO" doc:name="Logger" doc:id="a0a95aaa-a702-42a8-958d-48191ad4ddc0" message="#[attributes]"/>
+		<logger level="DEBUG" doc:name="Logger" doc:id="2f1e85e1-6766-4257-916a-318dff972150" message="#[payload]"/>
+		<choice doc:name="Choice" doc:id="33474b7d-0502-4e39-be3d-d39b30dc212c" >
+			<when expression='#["" == attributes.queryParams.prcMode]'>
+				<logger level="INFO" doc:name="Logger" doc:id="6a3db35b-0352-49b9-a3ce-18b09ca54bdc" message="prcMode=null"/>
+				<http:request method="GET" doc:name="Request" doc:id="8dab1e9e-80aa-473c-a6f2-cabaa3a84b74" config-ref="sys_HTTP_Request_conf" path="/sys/download">
+					<http:query-params ><![CDATA[#[output application/java
+---
+{
+	(sysMode : attributes.queryParams.sysMode) if attributes.queryParams.sysMode != null,
+}]]]></http:query-params>
+				</http:request>
+			</when>
+			<when expression='#["zero" == attributes.queryParams.prcMode]'>
+				<logger level="INFO" doc:name="Logger" doc:id="9042ca29-0f33-4a52-91b8-e386247954cb" message="prcMode=zero"/>
+				<raise-error doc:name="Raise error" doc:id="07ed34aa-8461-4f23-b486-339ecd0dcb05" type="APP:NOT_IMPLEMENTED"/>
+			</when>
+			<otherwise>
+				<logger level="INFO" doc:name="Logger" doc:id="e572a75c-8585-4756-8ff3-538ab1e8e4f1" />
+				<raise-error doc:name="Raise error" doc:id="11eebf54-d885-4474-86fe-3619a9f8d573" type="APP:UNKNOWN_MODE" description='unkown "prcMode"'/>
+			</otherwise>
+		</choice>
+	</flow>
+
+	<flow name="sysDownloadFlow" doc:id="b344ee9b-dad8-4dcc-8915-c95552fe60fb" >
+		<http:listener doc:name="Listener" doc:id="b6442cbb-e401-414b-9cda-4c7df183b5b1" config-ref="HTTP_Listener_config" path="/sys/download"/>
+		<logger level="INFO" doc:name="Logger" doc:id="c1ea3114-49a6-4773-868f-0eac456fdfbe" message="#[attributes]"/>
+		<logger level="DEBUG" doc:name="Logger" doc:id="dee39f21-c7eb-467f-93e0-0bac4690fb26" message="#[payload]"/>
+		<choice doc:name="Choice" doc:id="5e964485-8f1b-467d-a55b-f39c4428b77e" >
+			<when expression='#[null == attributes.queryParams.sysMode]'>
+				<logger level="INFO" doc:name="Logger" doc:id="7ecdd8c3-65cf-49b5-98f1-caea6a23d87d" message="sysMode=null"/>
+				<basic:gernerate-dummy-data doc:name="Gernerate dummy data" doc:id="ba0f7cce-7818-4d6a-8762-858a8a20cb9a" arg0="#[attributes.queryParams.sysSize default 16]"/>
+			</when>
+			<when expression='"empty" == attributes.queryParams.sysMode'>
+				<logger level="INFO" doc:name="Logger" doc:id="3f877c57-c7fb-446f-86bc-03307352f437" message="sysMode=zero"/>
+				<set-payload value='#[""]' doc:name="Set Payload" doc:id="c889d9e3-8c98-41b8-a767-2c4812574141" />
+			</when>
+			<otherwise>
+				<logger level="INFO" doc:name="Logger" doc:id="71e79d54-8e88-47bc-8654-bec6fa1d0c5a" message="sysMode=#[attributes.queryParams.sysMode]"/>
+				<raise-error doc:name="Raise error" doc:id="36802520-7e2f-4d4c-95f3-6b8e57287ad9" type="APP:UNKNOWN_MODE" description='unkown "sysMode"'/>
+			</otherwise>
+		</choice>
+	</flow>
+</mule>
